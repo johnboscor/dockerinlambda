@@ -15,7 +15,7 @@ Parameters:
       Default: "dev"
     SecretToken:
       Type: String
-      Default: "allowapiaccesstointernalslalom"
+      Default: "<API token value>"
 
 Resources:
   # Create a secret token in Secrets Manager. 
