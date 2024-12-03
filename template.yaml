@@ -1,0 +1,115 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+
+  SAM Template for Equitable Postings Tool
+
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+
+Parameters:
+    DeployStage:
+      Type: String
+      Default: "dev"
+    SecretToken:
+      Type: String
+      Default: "allowapiaccesstointernalslalom"
+
+Resources:
+  # Create a secret token in Secrets Manager. 
+  ApiTokenSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: "ApiToken"
+      SecretString: !Ref SecretToken
+  
+  # This creates the API gateway resources to access the lambda function    
+  EPToolApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref DeployStage
+      Auth:
+        DefaultAuthorizer: LambdaTokenAuthorizer
+        Authorizers:
+          LambdaTokenAuthorizer:
+            FunctionArn: !GetAtt EPToolAuthFunction.Arn
+            Identity:
+              Header: authorizationToken
+
+  # The lambda function which hosts the Equitable Postings Tool APIs             
+  EPToolFunction:
+    Type: AWS::Serverless::Function 
+    Metadata:
+      Dockerfile: Dockerfile.lambda
+      DockerContext: .
+      DockerTag: lambda  
+    Properties:
+      FunctionUrlConfig:
+        AuthType: NONE
+      PackageType: Image
+      MemorySize: 512
+      Timeout: 180
+      ImageConfig:
+        Command: ["app.main.handler"]
+      Architectures:
+      - x86_64
+      Events:
+        default:
+          Type: Api
+          Properties:
+            RestApiId: !Ref EPToolApi
+            Path: /
+            Method: ANY
+            Auth:
+              DefaultAuthorizer: EPToolAuthorizer
+              Authorizers:
+                EPToolAuthorizer:
+                  FunctionArn: !GetAtt EPToolAuthFunction.Arn         
+        proxy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref EPToolApi
+            Path: /{proxy+}
+            Method: ANY
+            Auth:
+              DefaultAuthorizer: EPToolAuthorizer
+              Authorizers:
+                EPToolAuthorizer:
+                  FunctionArn: !GetAtt EPToolAuthFunction.Arn
+  
+  # The lambda function used for validating the token before API gateway calls the above lambda function                
+  EPToolAuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./auth
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Environment:
+        Variables:
+          SECRET_ID: "ApiToken"
+      Policies:
+      - Statement:
+        - Sid: CreateLogGroup
+          Effect: Allow
+          Action:
+          - logs:CreateLogStream
+          - logs:PutLogEvents
+          Resource: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*'
+        - Sid: AllowSecretsAccess
+          Effect: Allow
+          Action:
+          - secretsmanager:GetSecretValue
+          Resource: !Ref ApiTokenSecret
+Outputs:
+  EPToolApi:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${EPToolApi}.execute-api.${AWS::Region}.amazonaws.com/${DeployStage}/"
+  EPToolFunctionUrlEndpoint:
+      Description: "Functional docs URL(for internal use only)"
+      Value: !Join ["", [ Fn::GetAtt: EPToolFunctionUrl.FunctionUrl, "docs" ] ]         
+  EPToolFunction:
+    Description: EP Tool Lambda Function ARN
+    Value: !GetAtt EPToolFunction.Arn
+  

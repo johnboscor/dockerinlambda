@@ -1,0 +1,26 @@
+﻿Job Title,Tech,Estimated Percent Female Applicants,Gender Rating
+Data Visualisation,1,24%,Strongly Masculine
+Data Visualisation,1,26%,Masculine
+Data Visualisation,1,28%,Neutral
+Data Visualisation,1,30%,Feminine
+Data Visualisation,1,32%,Strongly Feminine
+Data Engineer,1,16%,Strongly Masculine
+Data Engineer,1,18%,Masculine
+Data Engineer,1,20%,Neutral
+Data Engineer,1,22%,Feminine
+Data Engineer,1,32%,Strongly Feminine
+Data Scientist,1,20%,Strongly Masculine
+Data Scientist,1,22%,Masculine
+Data Scientist,1,24%,Neutral
+Data Scientist,1,26%,Feminine
+Data Scientist,1,28%,Strongly Feminine
+Other Technical,1,18%,Strongly Masculine
+Other Technical,1,20%,Masculine
+Other Technical,1,22%,Neutral
+Other Technical,1,24%,Feminine
+Other Technical,1,26%,Strongly Feminine
+Non-Technical,0,38%,Strongly Masculine
+Non-Technical,0,41%,Masculine
+Non-Technical,0,44%,Neutral
+Non-Technical,0,47%,Feminine
+Non-Technical,0,50%,Strongly Feminine

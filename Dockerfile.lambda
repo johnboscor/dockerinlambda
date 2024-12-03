@@ -1,0 +1,26 @@
+FROM public.ecr.aws/lambda/python:3.8
+
+COPY ./requirements.txt ./requirements.txt
+RUN pip install -r ./requirements.txt
+
+# Copy all relevant app files
+COPY ./app ./app
+COPY ./scripts ./scripts
+COPY data/input/female_applicant_prediction_reference_data.csv ./data/input/
+COPY data/input/technical_flag_reference_tech_words.xlsx ./data/input/
+
+
+# Make data directory and its sub-directories without copying data
+RUN mkdir -p /data/
+RUN mkdir -p /data/input/
+RUN mkdir -p /data/output/
+RUN mkdir -p /data/raw/
+
+# Expose port 8000 in Docker and forward to localhost:80
+EXPOSE 80:8000
+
+# Run the API when container starts
+CMD ["app.main.handler"]
+
+# Note: To test this lambda based docker image locally, use port 8080 as below:
+# docker run -p 8000:8080 <docker_iamge>

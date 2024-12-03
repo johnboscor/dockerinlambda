@@ -1,0 +1,1 @@
+docker build -t kevin_tran_inclusive_job_ads .
