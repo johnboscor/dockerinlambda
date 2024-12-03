@@ -7,7 +7,7 @@
 
 ## Deployment with default parameters:
 - **Environment**: 'dev'
-- **API Token**: 'allowapiaccesstointernalslalom'
+- **API Token**: <Use the API token from api gateway>
 
 - **Issue the following set of commands:**
     - sam build
@@ -56,23 +56,23 @@ The command assumes that the files needed for the form data is present in the da
     1. single_inclusivity_rating
 
     curl --location 'https://he7j5altn4.execute-api.us-east-1.amazonaws.com/dev/single_inclusivity_rating' \
-    --header 'authorizationToken: allowapiaccesstointernalslalom' \
+    --header 'authorizationToken: <API token value>' \
     --header 'Content-Type: application/json' \
     --data '{
-    "job_description": "Slalom is a purpose-driven consulting firm that helps companies solve business problems and build for the future, with solutions spanning business advisory, customer experience, technology and analytics. We partnet with companies to push the buoundaries of what'\''s possible together. Founded in 2001 and headquartered in Seattle, WA, Slalom has organically grown to nearly 6,000 employess. We were names one of Fortune'\''s 100 best companies to work for in 2018 and are regularly recognized by our employees as a best place to work."
+    "job_description": "Company is a purpose-driven consulting firm that helps companies solve business problems and build for the future, with solutions spanning business advisory, customer experience, technology and analytics. We partnet with companies to push the buoundaries of what'\''s possible together. Founded in 2001 and headquartered in Seattle, WA, Company has organically grown to nearly 6,000 employess. We were names one of Fortune'\''s 100 best companies to work for in 2018 and are regularly recognized by our employees as a best place to work."
     }'
 
     2. batch_inclusivity_rating
 
     curl --location 'https://he7j5altn4.execute-api.us-east-1.amazonaws.com/dev/batch_inclusivity_rating' \
-    --header 'authorizationToken: allowapiaccesstointernalslalom' \
+    --header 'authorizationToken: <api token>' \
     --form 'input_file=@"/Users/john.br/inclusive-recruiting-john/data/input/sample_job_descriptions.csv"' \
     --form 'job_description_col="Job Description"'
 
     3. female_applicant_prediction
 
     curl --location 'https://he7j5altn4.execute-api.us-east-1.amazonaws.com/dev/female_applicant_prediction' \
-    --header 'authorizationToken: allowapiaccesstointernalslalom' \
+    --header 'authorizationToken: API token value' \
     --form 'job_title_col_name="External Job Title"' \
     --form 'tech_col_name="Tech"' \
     --form 'gender_tag_col_name="Gender Tag"' \
@@ -81,7 +81,7 @@ The command assumes that the files needed for the form data is present in the da
     4. technical_flag
 
     curl --location 'https://he7j5altn4.execute-api.us-east-1.amazonaws.com/dev/technical_flag' \
-    --header 'authorizationToken: allowapiaccesstointernalslalom' \
+    --header 'authorizationToken: API token value' \
     --form 'job_title_col_name="Job Title"' \
     --form 'job_description_col_name="Job Description"' \
     --form 'input_file=@"/Users/john.br/inclusive-recruiting-john/data/input/sample_job_descriptions.csv"'
